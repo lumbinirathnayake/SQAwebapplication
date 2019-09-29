@@ -1,0 +1,169 @@
+
+<div *ngIf="createView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto;min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+            <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          <h3>Create New Bug</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="addBugsForm" (ngSubmit)="saveBug()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="bugTitle" matInput placeholder="Bug Title" required>
+                    <mat-error *ngIf="addBugsForm.get('bugTitle').invalid">Bug Title is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                      <input type="text" formControlName="bugFeature" matInput placeholder="Feature" [matAutocomplete]="feature" required>
+                      <mat-error *ngIf="addBugsForm.get('bugFeature').invalid">Feature is required!</mat-error>
+                      <mat-autocomplete #feature="matAutocomplete" [displayWith]="displayFeatureAutocomplete">
+                          <mat-option *ngFor="let fe of filteredFeatures | async" [value]="fe">
+                              {{fe.featureName}}
+                          </mat-option>
+                      </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="text" placeholder="Test Case" matInput formControlName="bugTestCase" [matAutocomplete]="testCase" required>
+                      <mat-error *ngIf="addBugsForm.get('bugTestCase').invalid">Please Choose a Test Case!</mat-error>
+                      <mat-autocomplete #testCase="matAutocomplete" [displayWith]="displayTestCaseAutocomplete">
+                        <mat-option *ngFor="let tc of filteredTestCases | async" [value]="tc">
+                          {{tc.testCaseTitle}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="text" placeholder="Assignee" matInput formControlName="bugAssignee" [matAutocomplete]="assignee" required>
+                      <mat-error *ngIf="addBugsForm.get('bugAssignee').invalid">Please Choose an Assignee!</mat-error>
+                      <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let assignee of filteredAssignee | async" [value]="assignee">
+                          {{assignee.userFname}} {{assignee.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select formControlName="bugPriority" placeholder="Priority" required>
+                            <mat-option *ngFor="let priority of priorities" [value]="priority.name">
+                                {{priority.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="addBugsForm.get('bugPriority').invalid">Please Choose a Priority!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select formControlName="bugStatus" placeholder="Status" required>
+                            <mat-option *ngFor="let status of bugStatus" [value]="status.name">
+                                {{status.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="addBugsForm.get('bugStatus').invalid">Please Choose a Status!</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="text" placeholder="Sprint" matInput formControlName="bugSprint" [matAutocomplete]="testCase1" required>
+                      <mat-error *ngIf="addBugsForm.get('bugSprint').invalid">Please Choose a Sprint!</mat-error>
+                      <mat-autocomplete #testCase1="matAutocomplete" [displayWith]="displaySprintAutocomplete">
+                        <mat-option *ngFor="let spr of filteredSprints | async" [value]="spr">
+                          {{spr.sprintName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="text" placeholder="Reporter" matInput formControlName="bugReporter" [matAutocomplete]="reporter" required>
+                      <mat-error *ngIf="addBugsForm.get('bugReporter').invalid">Please Choose a Reporter!</mat-error>
+                      <mat-autocomplete #reporter="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let re of filteredReporter | async" [value]="re">
+                          {{re.userFname}} {{re.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select formControlName="bugSeverity" placeholder="Severity" required>
+                            <mat-option *ngFor="let severity of severities" [value]="severity.name">
+                                {{severity.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="addBugsForm.get('bugSeverity').invalid">Please Choose a Severity!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-select formControlName="bugEnvironment" placeholder="Environment" required>
+                            <mat-option *ngFor="let status of bugEnvironment" [value]="status.name">
+                                {{status.name}}
+                            </mat-option>
+                        </mat-select>
+                      <mat-error *ngIf="addBugsForm.get('bugEnvironment').invalid">Please Choose a Environment!</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                    <fieldset class="border p-2 w-100">
+                        <legend class="w-auto">Description</legend>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="15" formControlName="bugDescription"></textarea>
+                        </div>
+                    </fieldset>
+                </div>
+                  <div class="row">
+                      <fieldset class="border p-2 w-100">
+                          <legend class="w-auto">Steps To Reproduce</legend>
+                          <div class="form-group">
+                              <textarea class="form-control" rows="15" formControlName="bugStepToReproduce"></textarea>
+                          </div>
+                      </fieldset>
+                  </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Save</button>
+            <button type="button" (click)="clearForm()" class="btn btn-light float-sm-left">Clear</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="createSuccessMsgView" style="min-width: 300px" >
+    <div class="card card-profile">
+        <div class="card-avatar">
+            <a>
+                <img class="img" src="../../../../assets/icons/checked.png" />
+            </a>
+        </div>
+        <div class="card-body">
+            <h6 class="card-category text-gray">Successfully Created!</h6>
+            <h4 class="card-title">{{addBugsForm.get('bugTitle').value}}</h4>
+            <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+    <div class="card card-profile">
+        <div class="card-avatar">
+            <a>
+                <img class="img" src="../../../../assets/icons/exclamation.png" />
+            </a>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Warning!! Something went wrong!!</h4>
+            <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+        </div>
+    </div>
+</div>
+

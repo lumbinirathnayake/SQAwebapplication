@@ -1,0 +1,193 @@
+<div *ngIf="editView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto;min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Update Task</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="editTaskForm" (ngSubmit)="updateTasks()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <mat-form-field>
+                <input formControlName="taskName" matInput placeholder="Task Name" required>
+                <mat-error *ngIf="editTaskForm.get('taskName').invalid">Task Name is required!</mat-error>
+              </mat-form-field>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <mat-form-field>
+                <input formControlName="taskSummery" matInput placeholder="Task Summery" required>
+                <mat-error *ngIf="editTaskForm.get('taskSummery').invalid">Task Summery is required!</mat-error>
+              </mat-form-field>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <mat-form-field>
+                <input formControlName="taskDescription" matInput placeholder="Task Description">
+                <mat-error *ngIf="editTaskForm.get('taskDescription').invalid">Task Description is required!</mat-error>
+              </mat-form-field>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <mat-form-field>
+                <input type="text" placeholder="Sprint" matInput formControlName="taskSprint" [matAutocomplete]="sprint" required>
+                <mat-error *ngIf="editTaskForm.get('taskSprint').invalid">Please Choose a Sprint!</mat-error>
+                <mat-autocomplete #sprint="matAutocomplete" [displayWith]="displaySprintAutocomplete">
+                  <mat-option *ngFor="let user of filteredSprints | async" [value]="user">
+                    {{user.sprintName}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-6">
+            <fieldset class="border p-2">
+              <div class="row content-body">
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input formControlName="taskAssignee" matInput placeholder="Assignee" [matAutocomplete]="assignee" required>
+                    <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayAssigneeAutocomplete">
+                      <mat-option *ngFor="let user of filteredAssignee | async" [value]="user">
+                        {{user.userFname}} {{user.userLName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="editTaskForm.get('taskAssignee').invalid">Assignee is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <mat-select formControlName="taskStatus" placeholder="Status" required>
+                      <mat-option *ngFor="let status of taskStatus" [value]="status.name">
+                        {{status.name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="editTaskForm.get('taskStatus').invalid">Status is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input matInput formControlName="taskStartDate" [matDatepicker]="picker" placeholder="Choose Task Start Date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="col-sm-6">
+            <fieldset class="border p-2">
+              <div class="row content-body">
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input formControlName="taskCreator" matInput placeholder="Creator" [matAutocomplete]="creator">
+                    <mat-autocomplete #creator="matAutocomplete" [displayWith]="displayCreatorAutocomplete">
+                      <mat-option *ngFor="let user of filteredCreators | async" [value]="user">
+                        {{user.userFname}} {{user.userLName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="editTaskForm.get('taskCreator').invalid">Creator is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input type="number" formControlName="taskEstimatedTime" matInput placeholder="Estimated Time (Number of Hours)">
+                    <mat-error *ngIf="editTaskForm.get('taskEstimatedTime').invalid">Estimated Time is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field>
+                    <input matInput formControlName="taskEndDate" [matDatepicker]="picker1" placeholder="Choose Task End Date">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Update</button>
+            <button type="button" (click)="displayWarningView()" class="btn btn-light float-sm-left">Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="updateSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Updated</h6>
+      <h4 class="card-title">{{editTaskForm.get('taskName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteWarningView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation-mark.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-category text-gray">Heads Up!</h4>
+      <h6 class="card-title">Do you want to surely delete {{existingTask.get('taskName').value}}</h6>
+      <button class="btn btn-danger btn-round" (click) = "deleteTask()" mat-button>Yes</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteSuccessView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully deleted</h6>
+      <h4 class="card-title">{{editTaskForm.get('taskName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div *ngIf="editView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto;min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Update Sprint</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="editSprintForm" (ngSubmit)="updateEpic()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="sprintName" matInput placeholder="Sprint Name" required>
+                    <mat-error *ngIf="editSprintForm.get('sprintName').invalid">Sprint Name is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="sprintSummery" matInput placeholder="Sprint Summery" required>
+                    <mat-error *ngIf="editSprintForm.get('sprintSummery').invalid">Sprint Summery is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="sprintDescription" matInput placeholder="Sprint Description">
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="text" placeholder="Creator" matInput formControlName="sprintCreator" [matAutocomplete]="assignee" required>
+                      <mat-error *ngIf="editSprintForm.get('sprintCreator').invalid">Please Choose an Assignee!</mat-error>
+                      <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                          {{user.userFname}} {{user.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="dp3" formControlName="sprintStartDate" placeholder="Start Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <mat-select formControlName="sprintStatus" placeholder="Sprint Status" required>
+                        <mat-option *ngFor="let priority of priorities" [value]="priority.name">
+                          {{priority.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="editSprintForm.get('sprintStatus').invalid">Please Select Sprint status!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="dp2" formControlName="sprintEndDate" placeholder="End Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                      <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Update</button>
+            <button type="button" (click)="displayWarningView()" class="btn btn-light float-sm-left">Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="updateSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Updated</h6>
+      <h4 class="card-title">{{editSprintForm.get('sprintName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteWarningView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation-mark.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-category text-gray">Heads Up!</h4>
+      <h6 class="card-title">Do you want to surely delete {{editSprintForm.get('sprintName').value}}</h6>
+      <button class="btn btn-danger btn-round" (click) = "deleteSprint()" mat-button>Yes</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteSuccessView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully deleted</h6>
+      <h4 class="card-title">{{editSprintForm.get('sprintName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>

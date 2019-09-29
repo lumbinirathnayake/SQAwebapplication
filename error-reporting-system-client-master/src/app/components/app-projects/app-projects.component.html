@@ -1,0 +1,30 @@
+<div class="main-content">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="navbar-wrapper">
+        <form class="navbar-form">
+          <div class="input-group no-border" [formGroup]="projectSearchForm">
+            <input formControlName="projectSearch" class="form-control" placeholder="Search...">
+            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+              <i class="material-icons">search</i>
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <a class="float-right" mat-mini-fab (click)="openAddProjectModel()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div *ngFor="let project of (allProjects | projectSearch: projectSearchForm.get('projectSearch').value)">
+    <mat-card (click)="editProject(project)">
+      <mat-card-header>
+        <mat-card-title>Project_{{project.id}} | {{project.proName}}</mat-card-title>
+        <mat-card-subtitle>Lead By {{project.proLeadFName}} {{project.proLeadLName}} | Created on {{project.proCreatedDate | date:'yyyy-MM-dd'}}</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>

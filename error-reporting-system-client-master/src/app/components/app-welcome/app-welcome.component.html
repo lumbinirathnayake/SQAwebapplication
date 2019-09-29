@@ -1,0 +1,50 @@
+<div class="main-content">
+  <div class="main" style="background-image: url('../../../assets/img/geometric-1732847.jpg')">
+    <div class="row">
+      <div class="col-sm-5" style="padding-right: 0px;padding-left: 25px;margin-top: 100px">
+        <div class="card text-white bg-secondary">
+          <div class="card-body">
+            <h4 style="margin-top: 0px">Welcome to Test Lab</h4>
+            <h5 style="margin-bottom: 0px" class="card-title text-warning">How do I work in Test Lab</h5>
+            <p>Just Select your project and enjoy!</p>
+            <p>If You dont have any project, Please contact Your admin and enroll to a project</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-7" style="margin-top: 100px; padding-right: 25px">
+        <div class="card">
+          <div class="card-header card-header-success">
+            <h4 class="card-title">Assigned to Me</h4>
+          </div>
+          <div class="card-body">
+            <p *ngIf="disUnassign" class="text-warning">No stories Assigned to You</p>
+            <div *ngIf="disAssignedStories">
+              <div *ngFor="let story of allStories">
+                <mat-card style="margin-bottom: 15px" *ngIf="currentProject.id === story.storyProjectId" matBadge="{{story.storyPoints}}" (click)="viewStory(story)">
+                  <mat-card-header>
+                    <div class="row w-100">
+                      <div class="col-sm-8">
+                        <div style="width: 40px; padding-top: 13px" class="float-left">
+                          <mat-icon>speaker_notes</mat-icon>
+                        </div>
+                        <div>
+                          <mat-card-title>Story_{{story.id}} | {{story.storyName}}</mat-card-title>
+                          <mat-card-subtitle>Assign To {{story.storyAssigneeFName}} {{story.storyAssigneeLName}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <div class="col-sm-4" style="padding-right: 30px;padding-top: 15px;">
+                        <div class="float-right">
+                          {{story.storyEpicName}}
+                        </div>
+                      </div>
+                    </div>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

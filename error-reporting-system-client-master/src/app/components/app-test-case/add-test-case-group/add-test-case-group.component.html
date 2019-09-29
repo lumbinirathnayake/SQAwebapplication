@@ -1,0 +1,43 @@
+<div *ngIf="deleteWarnView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation-mark.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-category text-gray">Heads Up!</h4>
+      <h6 class="card-title">Do you want to surely delete {{data.testCaseFeatureGroupName}}</h6>
+      <button class="btn btn-danger btn-round" (click) = "deleteFeatureGroup()" mat-button>Yes</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteSuccessView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully deleted</h6>
+      <h4 class="card-title">{{data.testCaseFeatureGroupName}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>

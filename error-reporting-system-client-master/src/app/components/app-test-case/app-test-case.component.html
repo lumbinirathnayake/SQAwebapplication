@@ -1,0 +1,83 @@
+<div class="main-content">
+  <nav class="navbar navbar-expand-lg navbar-transparent">
+    <div class="container-fluid">
+      <div class="navbar-wrapper">
+        <form class="navbar-form">
+          <div class="input-group no-border" [formGroup]="testCaseSearchForm">
+            <input formControlName="testCaseSearch" class="form-control" placeholder="Search...">
+            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+              <i class="material-icons">search</i>
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
+  <mat-tab-group dynamicHeight>
+    <mat-tab label="All">
+      <mat-accordion>
+        <div *ngFor="let fea of curentFeatures">
+          <mat-expansion-panel *ngIf="currectPro.id === fea.featureProjectId" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{fea.featureName}}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{fea.featureSummary}}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div *ngFor="let feaGrp of currentFeatureGroups">
+              <mat-expansion-panel *ngIf="fea.id == feaGrp.testCaseFeatureId">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{feaGrp.testCaseFeatureGroupName}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div *ngFor="let testCase of (currentTestCases | testCaseSearch: testCaseSearchForm.get('testCaseSearch').value)">
+                  <mat-card *ngIf="(testCase.testCaseFeatureGroupId == feaGrp.id) && currectPro.id === testCase.testCaseProjectId" (click)="editTestCase(testCase)">{{testCase.testCaseTitle}}</mat-card>
+                </div>
+
+                <div class="clearfix">
+                  <button class="float-right" mat-icon-button matTooltip="Delete Group" (click)="deleteFeatureGroup(feaGrp)">
+                    <mat-icon>delete_sweep</mat-icon>
+                  </button>
+                  <button class="float-right" mat-icon-button matTooltip="Create New Test Case" (click)="addNewTestCase(feaGrp)">
+                    <mat-icon>add_circle_outline</mat-icon>
+                  </button>
+                </div>
+              </mat-expansion-panel>
+            </div>
+
+            <mat-action-row>
+              <form [formGroup]="testCaseFeatureGroupForm" (ngSubmit)="addTestCaseGroup(fea)" class="w-100">
+                <div class="row w-100">
+                  <div class="col-sm-9">
+                    <mat-form-field>
+                      <input formControlName="testCaseFeatureGroupName" matInput type="text" placeholder="Enter The Group Name">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-3">
+                    <button type="submit" class="float-right" mat-raised-button color="primary">Add New Group</button>
+                  </div>
+                </div>
+              </form>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </div>
+      </mat-accordion>
+    </mat-tab>
+    <mat-tab label="Regression">
+      <div *ngFor="let testCase of currentTestCases">
+        <mat-card *ngIf="testCaseStatus(testCase, 'regression') && currectPro.id === testCase.testCaseProjectId" (click)="editTestCase(testCase)">{{testCase.testCaseTitle}}</mat-card>
+      </div>
+    </mat-tab>
+    <mat-tab label="Smoke">
+      <div *ngFor="let testCase of currentTestCases">
+        <mat-card *ngIf="testCaseStatus(testCase, 'smoke') && currectPro.id === testCase.testCaseProjectId" (click)="editTestCase(testCase)">{{testCase.testCaseTitle}}</mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

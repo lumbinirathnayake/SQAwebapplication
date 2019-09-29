@@ -1,0 +1,175 @@
+<div class="main-content">
+  <mat-tab-group>
+    <mat-tab label="Project Sprints">
+      <div class="container w-100">
+        <div class="row p-2">
+          <div class="col-sm-11">
+            <button (click)="drawer1.close()" mat-button [matMenuTriggerFor]="menu">{{currentSprintName}}</button>
+            <mat-menu #menu="matMenu">
+              <div *ngFor="let sprint of allSprints">
+                <div mat-menu-item *ngIf="sprint.sprintProjectId === currentPro.id">
+                  <mat-icon (click)="editSprintView(sprint)">edit</mat-icon>
+                  <span (click)="selectedSprint(sprint)">{{sprint.sprintName}}</span>
+                </div>
+              </div>
+            </mat-menu>
+          </div>
+          <div class="col-sm-1">
+            <mat-icon matTooltip="Create New Sprint" (click)="addSprintPopup()" style="cursor: pointer">playlist_add</mat-icon>
+          </div>
+        </div>
+        <mat-drawer-container>
+          <mat-drawer #drawer1 [mode]="drawerMood" position="end">
+            <div class="container">
+              <div class="row">
+                <mat-icon class="icon-color" (click)="drawer1.close()">close</mat-icon>
+              </div>
+              <div class="row w-100 mt-4">
+                <h4 style="text-align: center">{{currentStory.storyName}}</h4>
+              </div>
+              <div class="row">
+                <h6>{{currentStory.storySummery}}</h6>
+              </div>
+              <div class="row mt-4">
+                <div class="col-sm-6">
+                  <div>Epic : {{currentStory.storyEpicName}}</div>
+                  <div>Reporter : {{currentStory.storyReporterFName}} {{currentStory.storyReporterLName}}</div>
+                  <div>Status : {{currentStory.storyStatus}}</div>
+                  <div>Started Date : {{currentStory.storyStartDate | date: 'yyyy-MM-dd'}}</div>
+                  <div>Created : {{currentStory.storyCreatedDate | date: 'yyyy-MM-dd'}}</div>
+                </div>
+                <div class="col-sm-6">
+                  <div>Feature : {{currentStory.storyFeatureName}}</div>
+                  <div>Assignee : {{currentStory.storyAssigneeFName}} {{currentStory.storyAssigneeLName}}</div>
+                  <div>Points : {{currentStory.storyPoints}}</div>
+                  <div>End Date : {{currentStory.storyEndDate | date: 'yyyy-MM-dd'}}</div>
+                  <div>Last Updated : {{currentStory.storyUpdatedDate | date: 'yyyy-MM-dd'}}</div>
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="w-100">
+                  <h4 class="float-left">Tasks</h4>
+                  <mat-icon (click)="openAddTasks()" class="float-right" style="cursor: pointer">note_add</mat-icon>
+                </div>
+              </div>
+              <mat-list>
+                <div *ngFor="let task of allTasks">
+                  <mat-divider *ngIf="task.taskStoryId === currentStory.id"></mat-divider>
+                  <mat-list-item *ngIf="task.taskStoryId === currentStory.id">
+                    <mat-icon (click)="openEditTasks(task)" style="margin-right: 10px" matListIcon>edit</mat-icon>
+                    <h6 (click)="openViewTasks(task)" matLine>{{task.taskName}}</h6>
+                  </mat-list-item>
+                </div>
+              </mat-list>
+            </div>
+          </mat-drawer>
+          <mat-drawer-content>
+            <div *ngIf="displayStories">
+              <div *ngFor="let story of allStories">
+                <div *ngIf="currentPro.id === story.storyProjectId && story.storySprintId === selectedSprintObj.id ">
+                  <mat-card (click)="drawerData(story) && drawer1.open()" matBadge="{{story.storyPoints}}">
+                    <mat-card-header>
+                      <div class="row w-100">
+                        <div class="col-sm-8">
+                          <div style="width: 40px; padding-top: 13px" class="float-left">
+                            <mat-icon>speaker_notes</mat-icon>
+                          </div>
+                          <div>
+                            <mat-card-title>Sto_{{story.id}} | {{story.storyName}}</mat-card-title>
+                            <mat-card-subtitle>Assign To {{story.storyAssigneeFName}} {{story.storyAssigneeLName}}</mat-card-subtitle>
+                          </div>
+                        </div>
+                        <div class="col-sm-4" style="padding-right: 30px;padding-top: 15px;">
+                          <div class="float-right">
+                            {{story.storyEpicName}}
+                          </div>
+                        </div>
+                      </div>
+                    </mat-card-header>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </mat-tab>
+    <mat-tab label="Backlog">
+      <div class="container w-100">
+        <mat-drawer-container>
+          <mat-drawer #drawer [mode]="drawerMood" position="end">
+            <div class="container">
+              <div class="row">
+                <mat-icon class="icon-color" (click)="drawer.close()">close</mat-icon>
+              </div>
+              <div class="row w-100 mt-4">
+                <h4 style="text-align: center">{{currentStory.storyName}}</h4>
+              </div>
+              <div class="row">
+                <h6>{{currentStory.storySummery}}</h6>
+              </div>
+              <div class="row mt-4">
+                <div class="col-sm-6">
+                  <div>Epic : {{currentStory.storyEpicName}}</div>
+                  <div>Reporter : {{currentStory.storyReporterFName}} {{currentStory.storyReporterLName}}</div>
+                  <div>Status : {{currentStory.storyStatus}}</div>
+                  <div>Started Date : {{currentStory.storyStartDate | date: 'yyyy-MM-dd'}}</div>
+                  <div>Created : {{currentStory.storyCreatedDate | date: 'yyyy-MM-dd'}}</div>
+                </div>
+                <div class="col-sm-6">
+                  <div>Feature : {{currentStory.storyFeatureName}}</div>
+                  <div>Assignee : {{currentStory.storyAssigneeFName}} {{currentStory.storyAssigneeLName}}</div>
+                  <div>Points : {{currentStory.storyPoints}}</div>
+                  <div>End Date : {{currentStory.storyEndDate | date: 'yyyy-MM-dd'}}</div>
+                  <div>Last Updated : {{currentStory.storyUpdatedDate | date: 'yyyy-MM-dd'}}</div>
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="w-100">
+                  <h4 class="float-left">Tasks</h4>
+                  <mat-icon (click)="openAddTasks()" class="float-right" style="cursor: pointer">note_add</mat-icon>
+                </div>
+              </div>
+              <mat-list>
+                <div *ngFor="let task of allTasks">
+                  <mat-divider *ngIf="task.taskStoryId === currentStory.id"></mat-divider>
+                  <mat-list-item *ngIf="task.taskStoryId === currentStory.id">
+                    <mat-icon (click)="openEditTasks(task)" style="margin-right: 10px" matListIcon>edit</mat-icon>
+                    <h6 (click)="openViewTasks(task)" matLine>{{task.taskName}}</h6>
+                  </mat-list-item>
+                </div>
+              </mat-list>
+            </div>
+          </mat-drawer>
+          <mat-drawer-content>
+            <div *ngFor="let story of allStories">
+              <div *ngIf="currentPro.id === story.storyProjectId &&
+                      story.storySprintName === 'Backlog'">
+                <mat-card style="margin-top: 12px; margin-bottom: 0px" (click)="drawerData(story) && drawer.open()" matBadge="{{story.storyPoints}}">
+                  <mat-card-header>
+                    <div class="row w-100">
+                      <div class="col-sm-8">
+                        <div style="width: 40px; padding-top: 13px" class="float-left">
+                          <mat-icon>speaker_notes</mat-icon>
+                        </div>
+                        <div>
+                          <mat-card-title>Story_{{story.id}} | {{story.storyName}}</mat-card-title>
+                          <mat-card-subtitle>Assign To {{story.storyAssigneeFName}} {{story.storyAssigneeLName}}</mat-card-subtitle>
+                        </div>
+                      </div>
+                      <div class="col-sm-4" style="padding-right: 30px;padding-top: 15px;">
+                        <div class="float-right">
+                          {{story.storyEpicName}}
+                        </div>
+                      </div>
+                    </div>
+                  </mat-card-header>
+                </mat-card>
+              </div>
+            </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

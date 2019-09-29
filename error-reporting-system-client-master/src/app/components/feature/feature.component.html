@@ -1,0 +1,43 @@
+<div class="main-content">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="navbar-wrapper">
+        <form class="navbar-form">
+          <div class="input-group no-border" [formGroup]="featureSearchForm">
+            <input formControlName="fearureSearch" class="form-control" placeholder="Search...">
+            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+              <i class="material-icons">search</i>
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <a class="float-right" mat-mini-fab (click)="addNewFeature()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div *ngFor="let feature of (allFeatures | featurePipe: featureSearchForm.get('fearureSearch').value)">
+    <mat-card *ngIf="currentPro.id === feature.featureProjectId" (click)="viewFeature(feature)">
+      <mat-card-header>
+        <div class="row w-100">
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-1">
+                <div style="width: 40px; padding-top: 13px" class="float-left">
+                  <mat-icon>featured_video</mat-icon>
+                </div>
+              </div>
+              <div class="col-sm-11">
+                <mat-card-title>Feature_{{feature.id}} | {{feature.featureName}}</mat-card-title>
+                <mat-card-subtitle>Assign to {{feature.featureAssigneeFName}} {{feature.featureAssigneeLName}} | Created on {{feature.featureCreatedDate | date:'yyyy-MM-dd'}}</mat-card-subtitle>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>

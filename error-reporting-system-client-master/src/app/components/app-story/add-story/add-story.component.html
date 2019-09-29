@@ -1,0 +1,152 @@
+<div *ngIf="createView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto; min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Create New Story</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="addStoryForm" (ngSubmit)="saveEpic()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="storyName" matInput placeholder="Story Name" required>
+                    <mat-error *ngIf="addStoryForm.get('storyName').invalid">Story Name is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="storySummery" matInput placeholder="Story Summery" required>
+                    <mat-error *ngIf="addStoryForm.get('storySummery').invalid">Story Summery is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input type="text" formControlName="storyEpic" matInput placeholder="Epic" [matAutocomplete]="epic" required>
+                    <mat-error *ngIf="addStoryForm.get('storyEpic').invalid">Epic is required!</mat-error>
+                    <mat-autocomplete #epic="matAutocomplete" [displayWith]="displayEpicAutocomplete">
+                      <mat-option *ngFor="let epic of filteredEpics | async" [value]="epic">
+                        {{epic.epicName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="storyDescription" matInput placeholder="Story Description">
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="text" placeholder="Feature" matInput formControlName="storyFeature" [matAutocomplete]="feature" required>
+                      <mat-error *ngIf="addStoryForm.get('storyFeature').invalid">Please Choose an Feature!</mat-error>
+                      <mat-autocomplete #feature="matAutocomplete" [displayWith]="displayFeatureAutocomplete">
+                        <mat-option *ngFor="let feature of filteredFeatures | async" [value]="feature">
+                          {{feature.featureName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="text" placeholder="Assignee" matInput formControlName="storyAssignee" [matAutocomplete]="assignee" required>
+                      <mat-error *ngIf="addStoryForm.get('storyAssignee').invalid">Please Choose an Assignee!</mat-error>
+                      <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let user of filteredAssignee | async" [value]="user">
+                          {{user.userFname}} {{user.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <mat-select formControlName="storyStatus" placeholder="Status" required>
+                        <mat-option *ngFor="let status of storyStatus" [value]="status.name">
+                          {{status.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="addStoryForm.get('storyStatus').invalid">Please Select Story status!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="dp1" formControlName="storyStartDate" placeholder="Start Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                      <mat-datepicker #dp1 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="text" placeholder="Sprint" matInput formControlName="storySprint" [matAutocomplete]="sprint" required>
+                      <mat-error *ngIf="addStoryForm.get('storySprint').invalid">Please Choose a Sprint!</mat-error>
+                      <mat-autocomplete #sprint="matAutocomplete" [displayWith]="displaySprintAutocomplete">
+                        <mat-option *ngFor="let user of filteredSprints | async" [value]="user">
+                          {{user.sprintName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="text" placeholder="Reporter" matInput formControlName="storyReporter" [matAutocomplete]="reporter" required>
+                      <mat-error *ngIf="addStoryForm.get('storyReporter').invalid">Please Choose an Reporter!</mat-error>
+                      <mat-autocomplete #reporter="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let user of filteredReporter | async" [value]="user">
+                          {{user.userFname}} {{user.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="number" placeholder="Story Points" matInput formControlName="storyPoints" required>
+                      <mat-error *ngIf="addStoryForm.get('storyPoints').invalid">Please Input Story Points!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="dp2" formControlName="storyEndDate" placeholder="End Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                      <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Save</button>
+            <button type="button" (click)="clearForm()" class="btn btn-light float-sm-left">Clear</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="createSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Created!</h6>
+      <h4 class="card-title">{{addStoryForm.get('storyName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>

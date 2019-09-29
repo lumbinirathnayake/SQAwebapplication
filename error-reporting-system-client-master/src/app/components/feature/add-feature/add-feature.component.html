@@ -1,0 +1,123 @@
+
+<div *ngIf="createView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto; min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Create New Feature</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="addFeatureForm" (ngSubmit)="saveFeature()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="featureName" matInput placeholder="Feature Name" required>
+                    <mat-error *ngIf="addFeatureForm.get('featureName').invalid">Feature Name is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="featureSummary" matInput placeholder="Summary" required>
+                    <mat-error *ngIf="addFeatureForm.get('featureSummary').invalid">Feature Summary is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="featureDescription" matInput placeholder="Description">
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input type="text" placeholder="Epic" matInput formControlName="featureEpicId" [matAutocomplete]="epic" required>
+                    <mat-error *ngIf="addFeatureForm.get('featureEpicId').invalid">Please Choose an Epic!</mat-error>
+                    <mat-autocomplete #epic="matAutocomplete" [displayWith]="displayEpicAutocomplete">
+                      <mat-option *ngFor="let epic of filteredEpics | async" [value]="epic">
+                        {{epic.epicName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="text" placeholder="Assignee" matInput formControlName="featureAssignee" [matAutocomplete]="assignee" required>
+                      <mat-error *ngIf="addFeatureForm.get('featureAssignee').invalid">Please Choose an Assignee!</mat-error>
+                      <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                          {{user.userFname}} {{user.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="dp3" formControlName="featureStartDate" placeholder="Start Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <mat-select formControlName="featureStatus" placeholder="Priority" required>
+                        <mat-option *ngFor="let priority of priorities" [value]="priority.name">
+                          {{priority.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="addFeatureForm.get('featureStatus').invalid">Please Select Feature status!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="dp2" formControlName="featureEndDate" placeholder="End Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                      <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Save</button>
+            <button type="button" (click)="clearForm()" class="btn btn-light float-sm-left">Clear</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="createSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Created!</h6>
+      <h4 class="card-title">{{addFeatureForm.get('featureName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+

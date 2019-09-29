@@ -1,0 +1,164 @@
+<div *ngIf="editView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto;min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Update User</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="editUserForm" (ngSubmit)="updateUser()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input formControlName="userEnmpId" matInput placeholder="Employee Id">
+                      <mat-error *ngIf="editUserForm.get('userEnmpId').invalid">Employee Id is Required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input formControlName="userFname" matInput placeholder="First Name">
+                      <mat-error *ngIf="editUserForm.get('userFname').invalid">First Name is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="email" formControlName="userEMail" matInput placeholder="Email">
+                      <mat-error *ngIf="editUserForm.get('userEMail').invalid">Email is Required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input formControlName="userLName" matInput placeholder="Last Name">
+                      <mat-error *ngIf="editUserForm.get('userLName').invalid">Last Name is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="userAddress" matInput placeholder="Address">
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input formControlName="userUsername" matInput placeholder="Username">
+                      <mat-error *ngIf="editUserForm.get('userUsername').invalid">Username is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <mat-select formControlName="userType" matInput placeholder="Type">
+                        <mat-option *ngFor="let userTypes of userTypes" [value]="userTypes.value">
+                          {{userTypes.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="editUserForm.get('userType').invalid">Type of the User is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <!--                  <mat-form-field class="w-100">-->
+                  <!--                    <mat-chip-list #chipList>-->
+                  <!--                      <mat-chip-->
+                  <!--                              *ngFor="let project of projects"-->
+                  <!--                              [selectable]="selectable"-->
+                  <!--                              [removable]="removable"-->
+                  <!--                              (removed)="remove(project)">-->
+                  <!--                        {{project.proName}}-->
+                  <!--                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>-->
+                  <!--                      </mat-chip>-->
+                  <!--                      <input-->
+                  <!--                              placeholder="Projects Enrolled"-->
+                  <!--                              #fruitInput-->
+                  <!--                              formControlName="userProjects"-->
+                  <!--                              [matAutocomplete]="auto"-->
+                  <!--                              [matChipInputFor]="chipList"-->
+                  <!--                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"-->
+                  <!--                              [matChipInputAddOnBlur]="addOnBlur"-->
+                  <!--                              (matChipInputTokenEnd)="add($event)">-->
+                  <!--                    </mat-chip-list>-->
+                  <!--                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">-->
+                  <!--                      <mat-option *ngFor="let use of filteredAssignee | async" [value]="use">-->
+                  <!--                        {{use.proName}}-->
+                  <!--                      </mat-option>-->
+                  <!--                    </mat-autocomplete>-->
+                  <!--                    <mat-error *ngIf="addUserForm.get('userProjects').invalid">Please select at least one project!</mat-error>-->
+                  <!--                  </mat-form-field>-->
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Update</button>
+            <button type="button" (click)="displayWarningView()" class="btn btn-light float-sm-left">Delete</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="updateSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Updated</h6>
+      <h4 class="card-title">{{editUserForm.get('userFname').value}} {{editUserForm.get('userLName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteWarningView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation-mark.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-category text-gray">Heads Up!</h4>
+      <h6 class="card-title">Do you want to surely delete {{editUserForm.get('userFname').value}} {{editUserForm.get('userLName').value}}</h6>
+      <button class="btn btn-danger btn-round" (click) = "deleteUsers()" mat-button>Yes</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="deleteSuccessView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully deleted</h6>
+      <h4 class="card-title">{{editUserForm.get('userFname').value}} {{editUserForm.get('userLName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+<div *ngIf="displayView">
+    <div class="main-content" style="min-width: 800px">
+        <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="card">
+            <div class="card-header card-header-success">
+                <h4 class="card-title">{{data.featureName}}</h4>
+                <p class="card-category">{{data.featureSummary}}</p>
+            </div>
+            <div class="card-body">
+                <p class="card-description">
+                    {{data.featureDescription}}
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Assignee : {{data.featureAssignee.userFname}} {{data.featureAssignee.userLName}}</p>
+                        <p>Started Date : {{data.featureStartDate | date: 'yyyy-MM-dd'}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Status : {{data.featureStatus}}</p>
+                        <p>End Date : {{data.featureEndDate | date: 'yyyy-MM-dd'}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" (click)="displayWarningView()" class="close m-1" data-dismiss="modal" aria-label="Close">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button type="button" (click)="displayEditView()" class="close m-1" data-dismiss="modal" aria-label="Close">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+</div>
+
+<div *ngIf="editView">
+  <div class="main-content" style="min-width: 800px; max-height: 500px; overflow-y: auto">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+            <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          <h3>Update Feature</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="editFeatureForm" (ngSubmit)="updateFeature()">
+          <div class="row mt-3">
+              <div class="col-sm-12">
+                  <fieldset class="border p-2">
+                      <div class="container">
+                          <div class="row">
+                              <mat-form-field class="w-100">
+                                  <input formControlName="featureName" matInput placeholder="Feature Name">
+                              </mat-form-field>
+                          </div>
+                          <div class="row">
+                              <mat-form-field class="w-100">
+                                  <input formControlName="featureSummary" matInput placeholder="Summary">
+                              </mat-form-field>
+                          </div>
+                          <div class="row">
+                              <mat-form-field class="w-100">
+                                  <input formControlName="featureDescription" matInput placeholder="Description">
+                              </mat-form-field>
+                          </div>
+                          <div class="row">
+                              <mat-form-field class="w-100">
+                                  <input type="text" placeholder="Epic" matInput formControlName="featureEpicId" [matAutocomplete]="epic">
+                                  <mat-autocomplete #epic="matAutocomplete" [displayWith]="displayEpicAutocomplete">
+                                      <mat-option *ngFor="let epic of filteredEpics | async" [value]="epic">
+                                          {{epic.epicName}}
+                                      </mat-option>
+                                  </mat-autocomplete>
+                              </mat-form-field>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <mat-form-field>
+                                      <input type="text" placeholder="Assignee" matInput formControlName="featureAssignee" [matAutocomplete]="assignee">
+                                      <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                                          <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                                              {{user.userFname}} {{user.userLName}}
+                                          </mat-option>
+                                      </mat-autocomplete>
+                                  </mat-form-field>
+                                  <mat-form-field>
+                                      <input matInput [matDatepicker]="dp3" formControlName="featureStartDate" placeholder="Start Date">
+                                      <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                                      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-sm-6">
+                                  <mat-form-field>
+                                      <mat-select formControlName="featureStatus" placeholder="Priority">
+                                          <mat-option *ngFor="let priority of priorities" [value]="priority.name">
+                                              {{priority.name}}
+                                          </mat-option>
+                                      </mat-select>
+                                  </mat-form-field>
+                                  <mat-form-field>
+                                      <input matInput [matDatepicker]="dp2" formControlName="featureEndDate" placeholder="End Date">
+                                      <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                                      <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+          </div>
+          <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Update</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="updateSuccessMsgView" style="min-width: 300px" >
+    <div class="card card-profile">
+        <div class="card-avatar">
+            <a>
+                <img class="img" src="../../../../assets/icons/checked.png" />
+            </a>
+        </div>
+        <div class="card-body">
+            <h6 class="card-category text-gray">Successfully Updated</h6>
+            <h4 class="card-title">{{editFeatureForm.get('featureName').value}}</h4>
+            <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="deleteWarningView" style="min-width: 300px" >
+    <div class="card card-profile">
+        <div class="card-avatar">
+            <a>
+                <img class="img" src="../../../../assets/icons/exclamation-mark.png" />
+            </a>
+        </div>
+        <div class="card-body">
+            <h4 class="card-category text-gray">Heads Up!</h4>
+            <h6 class="card-title">Do you want to surely delete {{editFeatureForm.get('featureName').value}}</h6>
+            <button class="btn btn-danger btn-round" (click) = "deleteFeature()" mat-button>Yes</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="deleteSuccessView" style="min-width: 300px" >
+    <div class="card card-profile">
+        <div class="card-avatar">
+            <a>
+                <img class="img" src="../../../../assets/icons/checked.png" />
+            </a>
+        </div>
+        <div class="card-body">
+            <h6 class="card-category text-gray">Successfully deleted</h6>
+            <h4 class="card-title">{{editFeatureForm.get('featureName').value}}</h4>
+            <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+    <div class="card card-profile">
+        <div class="card-avatar">
+            <a>
+                <img class="img" src="../../../../assets/icons/exclamation.png" />
+            </a>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Warning!! Something went wrong!!</h4>
+            <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+        </div>
+    </div>
+</div>
+

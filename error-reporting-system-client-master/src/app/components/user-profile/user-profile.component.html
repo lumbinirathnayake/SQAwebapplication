@@ -1,0 +1,94 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-8">
+              <div class="card">
+                  <div class="card-header card-header-danger">
+                      <h4 class="card-title">Edit Profile</h4>
+                      <p class="card-category">Complete your profile</p>
+                  </div>
+                  <div class="card-body">
+                      <form [formGroup]="userProfileForm" (ngSubmit)="updateUserProfile()">
+                          <div class="row">
+                              <div class="col-md-5">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userEnmpId" placeholder="Employee Id">
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-7">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userEMail" placeholder="Email address" type="email">
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userFname" placeholder="Fist Name" type="text">
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-6">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userLName" placeholder="Last Name" type="text">
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userAddress" placeholder="Address" type="text">
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-4">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userUsername" placeholder="Username" type="text">
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-4">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="userPassword" placeholder="Password" type="password">
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-4">
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput formControlName="confirmUserPassword" placeholder="Confirm Password" type="password">
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <button mat-raised-button type="submit" class="btn btn-danger pull-right">Update Profile</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div *ngIf="updateSuccessMsgView">
+                  <div class="card card-profile">
+                      <div class="card-avatar">
+                          <a>
+                              <img class="img" src="../../../assets/icons/checked.png" />
+                          </a>
+                      </div>
+                      <div class="card-body">
+                          <h6 class="card-category text-gray">Successfully Updated</h6>
+                          <h4 class="card-title">{{userProfileForm.get('userFname').value}} {{userProfileForm.get('userLName').value}}</h4>
+                      </div>
+                  </div>
+              </div>
+              <div *ngIf="errorMsgView">
+                  <div class="card card-profile">
+                      <div class="card-avatar">
+                          <a>
+                              <img class="img" src="../../../../assets/icons/exclamation.png" />
+                          </a>
+                      </div>
+                      <div class="card-body">
+                          <h4 class="card-title">Warning!! Something went wrong!!</h4>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="main-content">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="navbar-wrapper">
+        <form class="navbar-form">
+          <div class="input-group no-border" [formGroup]="storySearchForm">
+            <input formControlName="storySearch" class="form-control" placeholder="Search...">
+            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+              <i class="material-icons">search</i>
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <a class="float-right" mat-mini-fab (click)="addNewStory()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div *ngFor="let story of (allStories | storyPipe: storySearchForm.get('storySearch').value)">
+    <mat-card *ngIf="currentProject.id === story.storyProjectId" matBadge="{{story.storyPoints}}" (click)="viewStory(story)">
+      <mat-card-header>
+        <div class="row w-100">
+          <div class="col-sm-8">
+            <div style="width: 40px; padding-top: 13px" class="float-left">
+              <mat-icon>speaker_notes</mat-icon>
+            </div>
+            <div>
+              <mat-card-title>Story_{{story.id}} | {{story.storyName}}</mat-card-title>
+              <mat-card-subtitle>Assign To {{story.storyAssigneeFName}} {{story.storyAssigneeLName}}</mat-card-subtitle>
+            </div>
+          </div>
+          <div class="col-sm-4" style="padding-right: 30px;padding-top: 15px;">
+            <div class="float-right">
+              {{story.storyEpicName}}
+            </div>
+          </div>
+        </div>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>

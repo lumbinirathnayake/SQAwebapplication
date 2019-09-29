@@ -1,0 +1,176 @@
+<div *ngIf="createView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto; min-width: 800px">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 section-header">
+        <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3>Create New Test Case</h3>
+        <hr />
+      </div>
+    </div>
+    <form [formGroup]="addTestCaseForm" (ngSubmit)="saveTestCase()">
+      <div class="row mt-3">
+        <div class="col-sm-12">
+          <fieldset class="border p-2">
+            <mat-form-field>
+              <input formControlName="testCaseTitle" matInput placeholder="Test Case Title" required>
+              <mat-error *ngIf="addTestCaseForm.get('testCaseTitle').invalid">Test Case Title is required!</mat-error>
+            </mat-form-field>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <fieldset class="border p-2">
+            <div class="row content-body">
+              <div class="col-md-12">
+                <mat-form-field>
+                  <input formControlName="testCaseAssignee" matInput placeholder="Assignee" [matAutocomplete]="assignee" required>
+                  <mat-autocomplete #assignee="matAutocomplete" [displayWith]="displayAssigneeAutocomplete">
+                    <mat-option *ngFor="let user of filteredAssignee | async" [value]="user">
+                      {{user.userFname}} {{user.userLName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="addTestCaseForm.get('testCaseAssignee').invalid">Assignee is required!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field>
+                  <mat-select formControlName="testCasePriority" placeholder="Priority" required>
+                    <mat-option *ngFor="let priority of priorities" [value]="priority.name">
+                      {{priority.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="addTestCaseForm.get('testCasePriority').invalid">Priority is required!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field>
+                  <mat-select formControlName="testCaseStatus" placeholder="Status" required>
+                    <mat-option *ngFor="let status of testCaseStatus" [value]="status.name">
+                      {{status.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="addTestCaseForm.get('testCaseStatus').invalid">Status is required!</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-sm-6">
+          <fieldset class="border p-2">
+            <div class="row content-body">
+              <div class="col-md-12">
+                <mat-form-field>
+                  <input formControlName="testCaseCreator" matInput placeholder="Creator" [matAutocomplete]="creator">
+                  <mat-autocomplete #creator="matAutocomplete" [displayWith]="displayCreatorAutocomplete">
+                    <mat-option *ngFor="let user of filteredCreators | async" [value]="user">
+                      {{user.userFname}} {{user.userLName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="addTestCaseForm.get('testCaseCreator').invalid">Creator is required!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field>
+                  <mat-select formControlName="testCaseSeverity" placeholder="Severity" required>
+                    <mat-option *ngFor="let severity of severities" [value]="severity.name">
+                      {{severity.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="addTestCaseForm.get('testCaseSeverity').invalid">Severity is required!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field>
+                  <mat-select formControlName="testCaseAutomationStatus" placeholder="Automation Status" required>
+                    <mat-option *ngFor="let automationStatus of testCaseAutomationStatus" [value]="automationStatus.name">
+                      {{automationStatus.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="addTestCaseForm.get('testCaseAutomationStatus').invalid">Automation Status is required!</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-sm-12">
+          <fieldset class="border p-4">
+            <legend>Test Case Type</legend>
+            <div class="row">
+              <div class="col-sm-3" *ngFor="let caseType of testCaseTypess">
+                <mat-checkbox [value]="caseType.value" (change)="onCheckChange($event)">{{caseType.name}}</mat-checkbox>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <fieldset class="border p-2">
+            <legend class="w-auto">Test Step</legend>
+            <div class="row content-body">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <textarea class="form-control" rows="15" formControlName="testCaseTestStep"></textarea>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-sm-6">
+          <fieldset class="border p-2">
+            <legend class="w-auto">Expected Result</legend>
+            <div class="row content-body">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <textarea class="form-control" rows="15" formControlName="testCaseExpectedResult"></textarea>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-12 mt-2">
+          <button type="submit" class="btn btn-success float-sm-right">Save</button>
+          <button type="button" (click)="clearform()" class="btn btn-light float-sm-left">Clear</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+
+<div *ngIf="createSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Created!</h6>
+      <h4 class="card-title">{{addTestCaseForm.get('testCaseTitle').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>

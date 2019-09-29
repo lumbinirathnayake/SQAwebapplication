@@ -1,0 +1,116 @@
+<div *ngIf="createView">
+  <div class="main-content" style="max-height:500px; overflow-y: auto;min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Create New User</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="addUserForm" (ngSubmit)="saveUser()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input formControlName="userEnmpId" matInput placeholder="Employee Id">
+                      <mat-error *ngIf="addUserForm.get('userEnmpId').invalid">Employee Id is Required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input formControlName="userFname" matInput placeholder="First Name">
+                      <mat-error *ngIf="addUserForm.get('userFname').invalid">First Name is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input type="email" formControlName="userEMail" matInput placeholder="Email">
+                      <mat-error *ngIf="addUserForm.get('userEMail').invalid">Email is Required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input formControlName="userLName" matInput placeholder="Last Name">
+                      <mat-error *ngIf="addUserForm.get('userLName').invalid">Last Name is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="userAddress" matInput placeholder="Address">
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input formControlName="userUsername" matInput placeholder="Username">
+                      <mat-error *ngIf="addUserForm.get('userUsername').invalid">Username is Required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="password" formControlName="userPassword" matInput placeholder="Password">
+                      <mat-error *ngIf="addUserForm.get('userPassword').invalid">Password is Required!</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <mat-select formControlName="userType" matInput placeholder="Type">
+                        <mat-option *ngFor="let userTypes of userTypes" [value]="userTypes.value">
+                          {{userTypes.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="addUserForm.get('userType').invalid">Type of the User is Required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input type="password" formControlName="userConfirmPassword" matInput placeholder="Confirm Password">
+                      <mat-error *ngIf="addUserForm.get('userConfirmPassword').invalid">Confirm the password!</mat-error>
+<!--                      <mat-error *ngIf="addUserForm.errors?.matchingPassword">Password is Mismatching!</mat-error>-->
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Save</button>
+            <button type="button" (click)="clearForm()" class="btn btn-light float-sm-left">Clear</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="createSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Created!</h6>
+      <h4 class="card-title">{{addUserForm.get('userFname').value}} {{addUserForm.get('userLName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+

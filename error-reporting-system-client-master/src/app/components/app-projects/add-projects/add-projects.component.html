@@ -1,0 +1,134 @@
+<div *ngIf="createView" style="max-height: 480px; overflow-y: auto">
+  <div class="main-content" style="min-width: 800px">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 section-header">
+          <button type="button" class="close" [mat-dialog-close] data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3>Create New Project</h3>
+          <hr />
+        </div>
+      </div>
+      <form [formGroup]="addProjectsForm" (ngSubmit)="createNewProject()">
+        <div class="row mt-3">
+          <div class="col-sm-12">
+            <fieldset class="border p-2">
+              <div class="container">
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="proName" matInput placeholder="Project Name">
+                    <mat-error *ngIf="addProjectsForm.get('proName').invalid">Project Name is required!</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <input formControlName="proDescription" matInput placeholder="Project Description">
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <input formControlName="proLead" matInput placeholder="Project Lead" [matAutocomplete]="lead" required>
+                      <mat-error *ngIf="addProjectsForm.get('proLead').invalid">Project Name is required!</mat-error>
+                      <mat-autocomplete #lead="matAutocomplete" [displayWith]="displayUserAutocomplete">
+                        <mat-option *ngFor="let user of filteredLeads | async" [value]="user">
+                          {{user.userFname}} {{user.userLName}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input [matDatepicker]="dp3" formControlName="proStartedDate" matInput placeholder="Project Start Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                      <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-form-field>
+                      <mat-select formControlName="proType" placeholder="Project Type" required>
+                        <mat-option *ngFor="let priority of ProTypes" [value]="priority.name">
+                          {{priority.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="addProjectsForm.get('proType').invalid">Project Type is required!</mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input [matDatepicker]="dp2" formControlName="proEndDate" matInput placeholder="Project End Date">
+                      <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                      <mat-datepicker #dp2 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <mat-form-field class="w-100">
+                    <mat-chip-list #chipList>
+                      <mat-chip
+                              *ngFor="let user of projectsUsers"
+                              [selectable]="selectable"
+                              [removable]="removable"
+                              (removed)="remove(user)">
+                        {{user.userFname}} hai {{user.userLName}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input
+                              placeholder="Users Enrolled"
+                              #fruitInput
+                              formControlName="proUsers"
+                              [matAutocomplete]="auto"
+                              [matChipInputFor]="chipList"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="addOnBlur"
+                              (matChipInputTokenEnd)="add($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                      <mat-option *ngFor="let use of filteredUsers | async" [value]="use">
+                        {{use.userFname}} {{use.userLName}}
+                      </mat-option>
+                    </mat-autocomplete>
+<!--                    <mat-error *ngIf="addProjectsForm.get('proUsers').invalid">Please select at least one User!</mat-error>-->
+                  </mat-form-field>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 mt-2">
+            <button type="submit" class="btn btn-success float-sm-right">Save</button>
+            <button type="button" (click)="clearForm()" class="btn btn-light float-sm-left">Clear</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="createSuccessMsgView" style="min-width: 300px" >
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/checked.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h6 class="card-category text-gray">Successfully Created!</h6>
+      <h4 class="card-title">{{addProjectsForm.get('proName').value}}</h4>
+      <button class="btn btn-success btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="errorMsgView" style="min-width: 300px">
+  <div class="card card-profile">
+    <div class="card-avatar">
+      <a>
+        <img class="img" src="../../../../assets/icons/exclamation.png" />
+      </a>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">Warning!! Something went wrong!!</h4>
+      <button class="btn btn-primary btn-round" [mat-dialog-close] mat-button cdkFocusInitial>Ok</button>
+    </div>
+  </div>
+</div>
+

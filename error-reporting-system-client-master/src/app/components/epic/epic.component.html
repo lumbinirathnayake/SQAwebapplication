@@ -1,0 +1,43 @@
+<div class="main-content">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="navbar-wrapper">
+        <form class="navbar-form">
+          <div class="input-group no-border" [formGroup]="epicSearchForm">
+            <input formControlName="epicSearch" class="form-control" placeholder="Search...">
+            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+              <i class="material-icons">search</i>
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <a class="float-right" mat-mini-fab (click)="addNewEpic()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div *ngFor="let epic of (allEpics | epicSearch: epicSearchForm.get('epicSearch').value)">
+    <mat-card *ngIf="currentProject.id === epic.proId" (click)="viewEpics(epic)">
+      <mat-card-header>
+        <div class="row w-100">
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-1">
+                <div style="width: 40px; padding-top: 13px" class="float-left">
+                  <mat-icon>bubble_chart</mat-icon>
+                </div>
+              </div>
+              <div class="col-sm-11">
+                <mat-card-title>Epic_{{epic.id}} | {{epic.epicName}}</mat-card-title>
+                <mat-card-subtitle>Assign To {{epic.epicAssigneeFName}} {{epic.epicAssigneeLName}} | Created On {{epic.epicCreatedDate | date:'yyyy-MM-dd'}}</mat-card-subtitle>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>

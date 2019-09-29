@@ -1,0 +1,41 @@
+<div class="main-content">
+  <div class="row">
+    <div class="col-sm-5">
+      <div class="navbar-wrapper">
+        <form class="navbar-form">
+          <div class="input-group no-border" [formGroup]="bugSearchForm">
+            <input formControlName="bugSearch" class="form-control" placeholder="Search...">
+            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+              <i class="material-icons">search</i>
+              <div class="ripple-container"></div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <a class="float-right" mat-mini-fab (click)="addNewBug()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
+  </div>
+  <div *ngFor="let bug of (allBugs | bugSearch: bugSearchForm.get('bugSearch').value)">
+    <mat-card *ngIf="currentPro.id === bug.bugProjectId" (click)="viewBug(bug)">
+      <mat-card-header>
+        <div class="row w-100">
+          <div class="col-sm-8">
+            <div class="row">
+              <div style="width: 40px; padding-top: 13px" class="float-left">
+                <mat-icon>bug_report</mat-icon>
+              </div>
+              <div>
+                <mat-card-title>Bug_{{bug.id}} | {{bug.bugTitle}}</mat-card-title>
+                <mat-card-subtitle>Assign to {{bug.bugAssigneeFName}} {{bug.bugAssigneeLName}} | Created on {{bug.bugCreatedDate | date:'yyyy-MM-dd'}} | Updated on {{bug.bugUpdatedDate | date:'yyyy-MM-dd'}}</mat-card-subtitle>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
